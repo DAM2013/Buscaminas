@@ -1,0 +1,4 @@
+Buscaminas
+==========
+
+prototipo del buscaminas

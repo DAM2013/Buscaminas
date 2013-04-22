@@ -8,6 +8,13 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
+/*
+ *  NOMBRE:
+ *  APELLIDOS: 
+ *  ESTO ES UNA PRUEBA DE GITHUB 
+ * 
+ */
+
 namespace Buscaminas
 {
     public partial class Form1 : Form
@@ -36,6 +43,7 @@ namespace Buscaminas
                     boton.Height = anchoBoton;
                     boton.Location = new Point(i * anchoBoton, j * anchoBoton);
                     boton.Click += chequeaBoton;
+                    boton.Tag = 1;
                     matrizBotones[i, j] = boton;
                     panel1.Controls.Add(boton);
                 }

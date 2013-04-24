@@ -29,56 +29,57 @@ namespace Buscaminas
             InitializeComponent();
             
 
-            this.Height = columnas * anchoBoton + 40;
-            this.Width = filas * anchoBoton + 20;
+            this.Height = filas * anchoBoton + 40;
+            this.Width = columnas * anchoBoton + 20;
 
-            matrizBotones = new Button[filas, columnas];
+            matrizBotones = new Button[columnas,filas];
 
             for (int i = 0; i < filas; i++)
-                for (int j = 0; j < columnas; j++)
+                for (int j = 0; j < columnas ; j++)
                 {
                     Button boton = new Button();
                     //boton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
                     boton.Width = anchoBoton;
                     boton.Height = anchoBoton;
-                    boton.Location = new Point(i * anchoBoton, j * anchoBoton);
+                    boton.Location = new Point(j * anchoBoton, i * anchoBoton);
                     boton.Click += chequeaBoton;
-                    boton.Tag = 1;
-                    matrizBotones[i, j] = boton;
+                    boton.Tag = "1";
+                    matrizBotones[j, i] = boton;
                     panel1.Controls.Add(boton);
                 }
         }
 
+        /*
+         * chequeaBoton es un METODO RECURSIVO
+         * esto significa que se llama a sí mismo
+         * Las precauciones con los métodos recursivos pasan por:
+         * 1º entender qué hace el método y porqué se hace recursivo
+         * 2º siempre tiene que tener una salida con un if - else porque sino se cuelga el programa
+         */
+
+
         private void chequeaBoton(object sender, EventArgs e)
         {
             Button b = (sender as Button);
-            int columna  = b.Location.X /anchoBoton;
+            int columna = b.Location.X / anchoBoton;
             int fila = b.Location.Y / anchoBoton;
-
-            for (int i = 0; i < 3; i++) 
+            for (int i = 0; i < 3; i++)
             {
                 for (int j = 0; j < 3; j++)
                 {
-                    matrizBotones[columna +j -1, fila +i -1].BackColor = Color.Blue;
+                    int c = columna + j - 1;
+                    int f = fila + i - 1;
+                    if ((c >= 0) && (c < columnas) && (f >= 0) && (f < filas))
+                    {
+                        if (matrizBotones[c, f].BackColor != Color.Red)
+                        {
+                            matrizBotones[c, f].BackColor = Color.Red;
+                            chequeaBoton(matrizBotones[c, f], e);
+                        }
+                    }
                 }
             }
-
-            ////colorea en la fila del clic, el boton izquierdo y el derecho
-            //matrizBotones[columna - 1, fila].BackColor = Color.Blue;
-            //matrizBotones[columna, fila].BackColor = Color.Blue;
-            //matrizBotones[columna + 1, fila].BackColor = Color.Blue;
-
-            ////colorea en la fila superior del clic, el boton izquierdo, el central y el derecho
-            //matrizBotones[columna - 1, fila - 1].BackColor = Color.Blue;
-            //matrizBotones[columna, fila-1].BackColor = Color.Blue;
-            //matrizBotones[columna + 1, fila-1].BackColor = Color.Blue;
-
-            ////colorea en la fila inferior del clic, el boton izquierdo, el central y el derecho
-            //matrizBotones[columna - 1, fila + 1].BackColor = Color.Blue;
-            //matrizBotones[columna, fila + 1].BackColor = Color.Blue;
-            //matrizBotones[columna + 1, fila + 1].BackColor = Color.Blue;
-
-
         }
+
     }
 }

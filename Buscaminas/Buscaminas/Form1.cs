@@ -55,20 +55,28 @@ namespace Buscaminas
             int columna  = b.Location.X /anchoBoton;
             int fila = b.Location.Y / anchoBoton;
 
-            //colorea en la fila del clic, el boton izquierdo y el derecho
-            matrizBotones[columna - 1, fila].BackColor = Color.Blue;
-            matrizBotones[columna, fila].BackColor = Color.Blue;
-            matrizBotones[columna + 1, fila].BackColor = Color.Blue;
+            for (int i = 0; i < 3; i++) 
+            {
+                for (int j = 0; j < 3; j++)
+                {
+                    matrizBotones[columna +j -1, fila +i -1].BackColor = Color.Blue;
+                }
+            }
 
-            //colorea en la fila superior del clic, el boton izquierdo, el central y el derecho
-            matrizBotones[columna - 1, fila - 1].BackColor = Color.Blue;
-            matrizBotones[columna, fila-1].BackColor = Color.Blue;
-            matrizBotones[columna + 1, fila-1].BackColor = Color.Blue;
+            ////colorea en la fila del clic, el boton izquierdo y el derecho
+            //matrizBotones[columna - 1, fila].BackColor = Color.Blue;
+            //matrizBotones[columna, fila].BackColor = Color.Blue;
+            //matrizBotones[columna + 1, fila].BackColor = Color.Blue;
 
-            //colorea en la fila inferior del clic, el boton izquierdo, el central y el derecho
-            matrizBotones[columna - 1, fila + 1].BackColor = Color.Blue;
-            matrizBotones[columna, fila + 1].BackColor = Color.Blue;
-            matrizBotones[columna + 1, fila + 1].BackColor = Color.Blue;
+            ////colorea en la fila superior del clic, el boton izquierdo, el central y el derecho
+            //matrizBotones[columna - 1, fila - 1].BackColor = Color.Blue;
+            //matrizBotones[columna, fila-1].BackColor = Color.Blue;
+            //matrizBotones[columna + 1, fila-1].BackColor = Color.Blue;
+
+            ////colorea en la fila inferior del clic, el boton izquierdo, el central y el derecho
+            //matrizBotones[columna - 1, fila + 1].BackColor = Color.Blue;
+            //matrizBotones[columna, fila + 1].BackColor = Color.Blue;
+            //matrizBotones[columna + 1, fila + 1].BackColor = Color.Blue;
 
 
         }

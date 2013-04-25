@@ -11,7 +11,7 @@ using System.Windows.Forms;
 /*
  *  NOMBRE:
  *  APELLIDOS: 
- *  ESTO ES UNA PRUEBA DE GITHUB 
+ *  
  * 
  */
 
@@ -24,7 +24,10 @@ namespace Buscaminas
         int filas = 15;
         int columnas = 20;
         int anchoBoton = 20;
-        int minas = 20; 
+        int minas = 30;
+
+
+
 
         // si el tag es 1 es que no hay bomba
         // si el tag es 2 es que sí hay bomba
@@ -36,7 +39,7 @@ namespace Buscaminas
             this.Width = columnas * anchoBoton + 20;
 
             matrizBotones = new Button[columnas,filas];
-
+            //inicializo la matriz de botones
             for (int i = 0; i < filas; i++)
                 for (int j = 0; j < columnas ; j++)
                 {
@@ -46,72 +49,108 @@ namespace Buscaminas
                     boton.Height = anchoBoton;
                     boton.Location = new Point(j * anchoBoton, i * anchoBoton);
                     boton.Click += chequeaBoton;
-                    boton.Tag = "1";
+                    boton.Tag = "0";
                     matrizBotones[j, i] = boton;
                     panel1.Controls.Add(boton);
                 }
+            //genero aleatoriamente las minas y las distribuyo por el mapa
             poneMinas();
+            //dependiendo de las minas generadas y su posición, actualizo los tag de los botones
+            cuentaMinas();
         }
 
-        private void poneMinas() {
+        private void poneMinas() 
+        {
             Random aleatorio = new Random();
             int x = 0, y = 0; 
             for (int i = 0; i < minas; i++)
             {
                 x = aleatorio.Next(filas);
                 y = aleatorio.Next(columnas);
-                while (!matrizBotones[y, x].Tag.Equals("1"))
+                while (!matrizBotones[y, x].Tag.Equals("0"))
                 {
                     x = aleatorio.Next(filas);
                     y = aleatorio.Next(columnas);
                 }
-                matrizBotones[y, x].Tag = "2";
+                matrizBotones[y, x].Tag = "B";
                 matrizBotones[y, x].Text = "B";
+                matrizBotones[y, x].BackColor = Color.Coral;
             }
-        }
+
+        } //fin de poneMinas
+
+
+
+        private void cuentaMinas() 
+        {
+            //cambio los tag para que indiquen el nº de minas que hay alrededor
+            //los dos for anidados externos recorren uno por uno los elementos de la matriz
+            //los dos for anidados interiores recorren los 8 botones alrededor de una casilla 
+            //y suman el número de minas
+            for (int i = 0; i < filas; i++)
+                for (int j = 0; j < columnas; j++)
+                {
+                    int numeroMinas = 0;
+                    for (int m = -1; m < 2; m++)
+                        for (int n = -1; n < 2; n++)
+                        {
+                            int f = i + m;
+                            int c = j + n;
+                            if ((c < columnas) && (c >= 0) && (f < filas) && (f >= 0))
+                            {
+                                if (matrizBotones[c, f].Tag == "B")
+                                {
+                                    numeroMinas++;
+                                }
+                            }
+                        }
+                    if ((numeroMinas > 0) && (matrizBotones[j, i].Tag != "B"))
+                    {
+                        matrizBotones[j, i].Tag = numeroMinas;
+                        matrizBotones[j, i].Text = numeroMinas.ToString();
+                    }
+                }
+        }// fin de cuentMminas
+
 
         private void chequeaBoton(object sender, EventArgs e)
-         {
-            (sender as Button).Enabled = false;
+        {
+            //chequeaBoton mira en las 8 posiciones alrededor de un boton buscando las celdas vacías
             Button b = (sender as Button);
-            int columna  = b.Location.X /anchoBoton;
+            int columna = b.Location.X / anchoBoton;
             int fila = b.Location.Y / anchoBoton;
+            int numeroMinasAlrededor = 0;
 
-            for (int i = -1; i < 2; i++) {
-                for (int j = -1; j < 2; j++) {
-                    if ((columna + j < columnas) && (columna + j >= 0) &&
-                        (fila + i < filas) && (fila + i >= 0))
+            //si el Tag es 0 es porque no hay ninguna mina alrededor. 
+            //si fuera distinto de cero, no tengo que chequear nada mas
+            if (matrizBotones[columna, fila].Tag == "0")
+            {
+                b.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+                for (int i = -1; i < 2; i++)
+                {
+                    for (int j = -1; j < 2; j++)
                     {
-                        if (matrizBotones[columna + j, fila + i].BackColor != Color.Blue)
+                        int f = fila + i;
+                        int c = columna + j;
+                        if ((c < columnas) && (c >= 0) && (f < filas) && (f >= 0))
                         {
-                            matrizBotones[columna + j, fila + i].BackColor = Color.Blue;
-                            chequeaBoton(matrizBotones[columna + j, fila + i], e);
+                            if (matrizBotones[c, f].FlatStyle != System.Windows.Forms.FlatStyle.Flat)
+                            {
+                                if (numeroMinasAlrededor == 0)
+                                {
+                                    chequeaBoton(matrizBotones[c, f], e); 
+                                }
+                                else
+                                {
+                                    numeroMinasAlrededor++;
+                                }
+                            }
+
                         }
                     }
                 }
-            } 
-
-
-
-
-
-            ////colorea en la fila del clic, el boton izquierdo y el derecho
-            //matrizBotones[columna - 1, fila].BackColor = Color.Blue;
-            //matrizBotones[columna, fila].BackColor = Color.Blue;
-            //matrizBotones[columna + 1, fila].BackColor = Color.Blue;
-
-            ////colorea en la fila superior del clic, el boton izquierdo, el central y el derecho
-            //matrizBotones[columna - 1, fila - 1].BackColor = Color.Blue;
-            //matrizBotones[columna, fila-1].BackColor = Color.Blue;
-            //matrizBotones[columna + 1, fila-1].BackColor = Color.Blue;
-
-            ////colorea en la fila inferior del clic, el boton izquierdo, el central y el derecho
-            //matrizBotones[columna - 1, fila + 1].BackColor = Color.Blue;
-            //matrizBotones[columna, fila + 1].BackColor = Color.Blue;
-            //matrizBotones[columna + 1, fila + 1].BackColor = Color.Blue;
-
- 
-         }
+            }
+         } //fin de chequeaBoton
 
 
 
